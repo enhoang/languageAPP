@@ -3,7 +3,7 @@
  * Free, but availability and accuracy vary a lot by browser, device and accent — Chrome sends audio to
  * its own service, Safari uses the OS, Firefox has none. Results are a rough hint, never a score.
  */
-import { normalizeScript, normalizeSpelling } from './text';
+import { levenshtein, normalizeScript, normalizeSpelling } from './text';
 
 interface RecognitionAlternative { transcript: string; confidence: number }
 interface RecognitionResultEvent { results: ArrayLike<ArrayLike<RecognitionAlternative> & { isFinal: boolean }> }
@@ -73,9 +73,27 @@ export function listenOnce(lang: string, timeoutMs = 8000): { result: Promise<Li
   return { result, cancel: () => rec.abort() };
 }
 
-/** Does any recognized transcript match the target text? Case, spacing and punctuation are ignored. */
-export function transcriptMatches(target: string, transcripts: string[]): boolean {
-  const loose = (s: string) => normalizeScript(normalizeSpelling(s));
+/** Rough pronunciation levels, from worst to best. */
+export const SPEAK_LEVELS = ['none', 'retry', 'improve', 'good'] as const;
+export type SpeakLevel = (typeof SPEAK_LEVELS)[number];
+
+/**
+ * How close the best recognized transcript is to the target, 0–1. Case, spacing and punctuation are ignored;
+ * text is compared after canonical decomposition, so a Hangul syllable or a toned Vietnamese/pinyin letter
+ * that is partly right gets partial credit.
+ */
+export function transcriptSimilarity(target: string, transcripts: string[]): number {
+  const loose = (s: string) => normalizeScript(normalizeSpelling(s)).normalize('NFD');
   const t = loose(target);
-  return transcripts.some((x) => loose(x) === t);
+  if (!t) return 0;
+  return Math.max(0, ...transcripts.map((x) => {
+    const h = loose(x);
+    return 1 - levenshtein(t, h) / Math.max(t.length, h.length);
+  }));
+}
+
+/** Map similarity to a level: ≥ 90 % good · ≥ 70 % needs improvement · ≥ 40 % say it again · else not similar. */
+export function speakLevel(target: string, transcripts: string[]): SpeakLevel {
+  const s = transcriptSimilarity(target, transcripts);
+  return s >= 0.9 ? 'good' : s >= 0.7 ? 'improve' : s >= 0.4 ? 'retry' : 'none';
 }

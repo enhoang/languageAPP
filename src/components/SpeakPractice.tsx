@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { SpeakItem } from '../types';
 import { useCourse, useSpeech } from '../state/AppDataContext';
 import { useI18n } from '../i18n/LocaleContext';
-import { listenOnce, recognitionSupported, transcriptMatches, type ListenError } from '../lib/recognition';
+import { listenOnce, recognitionSupported, speakLevel, SPEAK_LEVELS, type ListenError, type SpeakLevel } from '../lib/recognition';
 import { AudioButton } from './Audio';
 import { Icon } from './Icon';
 import { cx } from './ui';
@@ -10,11 +10,18 @@ import { cx } from './ui';
 type RecState =
   | { s: 'idle' }
   | { s: 'listening' }
-  | { s: 'heard'; transcript: string; match: boolean }
+  | { s: 'heard'; transcript: string; level: SpeakLevel }
   | { s: 'error'; error: ListenError };
 
-function SpeakRow({ item, canRecognize, selfCheck, onSelfCheck }: {
-  item: SpeakItem; canRecognize: boolean; selfCheck: 'good' | 'again' | null; onSelfCheck: (v: 'good' | 'again') => void;
+const LEVEL_STYLE: Record<SpeakLevel, { box: string; on: string }> = {
+  none: { box: 'bg-rose-50 text-rose-800', on: 'bg-rose-100 text-rose-700 ring-1 ring-rose-200' },
+  retry: { box: 'bg-orange-50 text-orange-800', on: 'bg-orange-100 text-orange-700 ring-1 ring-orange-200' },
+  improve: { box: 'bg-amber-50 text-amber-800', on: 'bg-amber-100 text-amber-800 ring-1 ring-amber-200' },
+  good: { box: 'bg-emerald-50 text-emerald-800', on: 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200' },
+};
+
+function SpeakRow({ item, canRecognize, level, onLevel }: {
+  item: SpeakItem; canRecognize: boolean; level: SpeakLevel | null; onLevel: (v: SpeakLevel) => void;
 }) {
   const { course } = useCourse();
   const { lang } = useSpeech();
@@ -30,8 +37,11 @@ function SpeakRow({ item, canRecognize, selfCheck, onSelfCheck }: {
     cancelRef.current = cancel;
     const r = await result;
     cancelRef.current = null;
-    if (r.ok) setRec({ s: 'heard', transcript: r.transcripts[0], match: transcriptMatches(item.text, r.transcripts) });
-    else setRec({ s: 'error', error: r.error });
+    if (r.ok) {
+      const l = speakLevel(item.text, r.transcripts);
+      setRec({ s: 'heard', transcript: r.transcripts[0], level: l });
+      onLevel(l);
+    } else setRec({ s: 'error', error: r.error });
   };
   const stop = () => {
     cancelRef.current?.();
@@ -65,25 +75,24 @@ function SpeakRow({ item, canRecognize, selfCheck, onSelfCheck }: {
       <div aria-live="polite">
         {rec.s === 'listening' && <p className="mt-2 text-sm text-sky-700">{t('speak.listening')}</p>}
         {rec.s === 'heard' && (
-          <div className={cx('mt-2 rounded-lg px-3 py-2 text-sm', rec.match ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800')}>
+          <div className={cx('mt-2 rounded-lg px-3 py-2 text-sm', LEVEL_STYLE[rec.level].box)}>
             <span>{t('speak.heard')} </span>
             <span className={cx(course.fontClass, 'font-medium')} lang={course.speechLang}>“{rec.transcript}”</span>
-            <span className="ml-2 font-medium">{rec.match ? t('speak.close') : t('speak.noMatch')}</span>
+            <span className="ml-2 font-semibold">{t(`speak.level.${rec.level}`)}</span>
+            <span className="ml-1">— {t(`speak.levelHint.${rec.level}`)}</span>
           </div>
         )}
         {rec.s === 'error' && <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">{t(`speak.error.${rec.error}`)}</p>}
       </div>
 
-      <div className="mt-2 flex flex-wrap items-center gap-2">
-        <button type="button" onClick={() => onSelfCheck('good')} aria-pressed={selfCheck === 'good'}
-          className={cx('inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium transition', selfCheck === 'good' ? 'bg-emerald-100 text-emerald-700' : 'bg-stone-100 text-stone-600 hover:bg-stone-200')}>
-          <Icon name="check" className="h-3.5 w-3.5" /> {t('speak.good')}
-        </button>
-        <button type="button" onClick={() => onSelfCheck('again')} aria-pressed={selfCheck === 'again'}
-          className={cx('inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium transition', selfCheck === 'again' ? 'bg-peach-100 text-peach-600' : 'bg-stone-100 text-stone-600 hover:bg-stone-200')}>
-          <Icon name="refresh" className="h-3.5 w-3.5" /> {t('speak.again')}
-        </button>
-        {selfCheck && <span className="text-xs text-muted">{selfCheck === 'good' ? t('speak.goodDone') : t('speak.againDone')}</span>}
+      <div className="mt-2 flex flex-wrap items-center gap-1.5" role="group" aria-label={t('speak.rate')}>
+        <span className="mr-1 text-xs text-muted">{t('speak.rate')}</span>
+        {SPEAK_LEVELS.map((l) => (
+          <button key={l} type="button" onClick={() => onLevel(l)} aria-pressed={level === l}
+            className={cx('rounded-lg px-2.5 py-1 text-xs font-medium transition', level === l ? LEVEL_STYLE[l].on : 'bg-stone-100 text-stone-600 hover:bg-stone-200')}>
+            {l === 'good' && <Icon name="check" className="mr-1 inline h-3.5 w-3.5 align-[-2px]" />}{t(`speak.level.${l}`)}
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -91,21 +100,22 @@ function SpeakRow({ item, canRecognize, selfCheck, onSelfCheck }: {
 
 /**
  * Say each item aloud. Listen to the model, then either use the browser's speech recognition (an approximate
- * hint, where available) or the self-check buttons. Nothing is recorded into scores.
+ * hint, where available, which picks a level) or rate themselves on the same four levels. Nothing is recorded into scores.
  */
 export function SpeakPractice({ items }: { items: SpeakItem[] }) {
   const { t } = useI18n();
   const [canRecognize] = useState(recognitionSupported);
-  const [checks, setChecks] = useState<Record<number, 'good' | 'again'>>({});
-  const done = Object.values(checks).filter((v) => v === 'good').length;
+  // Latest rating per item: set automatically by speech recognition, or chosen by the learner.
+  const [levels, setLevels] = useState<Record<number, SpeakLevel>>({});
+  const done = Object.values(levels).filter((v) => v === 'good').length;
   return (
     <div className="space-y-2">
       <p className="rounded-xl bg-sky-50 px-3 py-2 text-xs text-sky-800">
         {canRecognize ? t('speak.note') : t('speak.unsupported')} {t('speak.manual')}
       </p>
       {items.map((it, i) => (
-        <SpeakRow key={`${it.text}-${i}`} item={it} canRecognize={canRecognize} selfCheck={checks[i] ?? null}
-          onSelfCheck={(v) => setChecks((c) => ({ ...c, [i]: v }))} />
+        <SpeakRow key={`${it.text}-${i}`} item={it} canRecognize={canRecognize} level={levels[i] ?? null}
+          onLevel={(v) => setLevels((c) => ({ ...c, [i]: v }))} />
       ))}
       {items.length > 1 && <p className="text-xs text-muted">{t('speak.progress', { done, total: items.length })}</p>}
     </div>
