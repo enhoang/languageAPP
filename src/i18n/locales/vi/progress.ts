@@ -1,0 +1,47 @@
+// Progress page (pages/Progress.tsx). Page title: common.nav.progress
+const progress = {
+  /** Page title. {{name}} = course name */
+  title: 'Tiến độ {{name}}',
+  subtitle: 'Tất cả số liệu được tính từ dữ liệu học thật đã lưu trong trình duyệt này.',
+  recommended: 'Đề xuất tiếp theo',
+  stat: {
+    lessonsCompleted: 'Bài hoàn thành',
+    totalTime: 'Tổng thời gian',
+    accuracy: 'Độ chính xác',
+    answered_one: '{{count}} câu đã trả lời',
+    answered_other: '{{count}} câu đã trả lời',
+    streak: 'Chuỗi ngày',
+    allLanguages: 'Mọi ngôn ngữ',
+  },
+  activity: 'Hoạt động 7 ngày',
+  activityNote: 'Thời gian học {{name}} trong 7 ngày qua. Mục tiêu hằng ngày tính chung mọi ngôn ngữ.',
+  mastery: 'Mức độ thành thạo từ vựng',
+  masteryAria: 'Phân bố mức độ thành thạo',
+  skills: 'Kỹ năng',
+  skillsEmpty: 'Chưa có dữ liệu. Hãy làm bài tập để thấy kết quả theo kỹ năng.',
+  weak: 'Điểm yếu cần chú ý',
+  weakEmpty: 'Chưa phát hiện điểm yếu nào (cần thêm dữ liệu trả lời, hoặc bạn đang làm rất tốt!).',
+  reviewQueue_one: 'Hàng đợi ôn tập ({{count}})',
+  reviewQueue_other: 'Hàng đợi ôn tập ({{count}})',
+  reviewNow: 'Ôn ngay',
+  noDue: 'Không có từ nào đến hạn.',
+  lapses_one: 'Sai {{count}} lần',
+  lapses_other: 'Sai {{count}} lần',
+  lapsedLegend: 'Màu hồng: từ vừa bị quên (được ưu tiên ôn trước).',
+  allCourses: 'Tổng quan các ngôn ngữ',
+  table: {
+    course: 'Ngôn ngữ',
+    lessons: 'Bài xong',
+    words: 'Từ đã học',
+    accuracy: 'Độ chính xác',
+    quizzes: 'Bài kiểm tra',
+  },
+  lessons: 'Bài học',
+  inProgress: 'Đang học',
+  inProgressBest: 'Đang học · cao nhất {{pct}}%',
+  notStarted: 'Chưa học',
+  quizHistory: 'Lịch sử bài kiểm tra',
+  noQuizzes: 'Chưa có bài kiểm tra nào.',
+};
+
+export default progress;

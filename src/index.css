@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #fbf8f2;
+  --color-ink: #2f3542;
+  --color-muted: #6b7280;
+  --color-line: #ece6db;
+
+  --color-sky-50: #f1f7fd;
+  --color-sky-100: #e1eef9;
+  --color-sky-200: #c4dcf1;
+  --color-sky-300: #a2c6e6;
+  --color-sky-400: #7eaad6;
+  --color-sky-500: #5d8fc3;
+  --color-sky-600: #4876a9;
+  --color-sky-700: #3b5f88;
+
+  --color-peach-50: #fff5f0;
+  --color-peach-100: #ffe7dc;
+  --color-peach-200: #ffd0bc;
+  --color-peach-400: #f2a487;
+  --color-peach-500: #e5856b;
+  --color-peach-600: #c8664d;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-zh: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  --font-ko: "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Nanum Gothic", sans-serif;
+}
+
+html {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+.font-zh {
+  font-family: var(--font-zh);
+}
+
+.font-ko {
+  font-family: var(--font-ko);
+}
+
+.fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in { animation: none; }
+  * { transition: none !important; }
+}

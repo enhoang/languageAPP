@@ -1,0 +1,97 @@
+// Settings page (pages/Settings.tsx). Page title: common.nav.settings
+const settings = {
+  language: {
+    title: 'Ngôn ngữ',
+    note: 'Đổi ngôn ngữ giao diện chỉ thay đổi chữ hiển thị. Tiến độ học, lịch ôn và cài đặt khác được giữ nguyên.',
+    noCourse: 'chưa chọn',
+    changeCourse: 'Đổi ngôn ngữ học',
+  },
+  session: {
+    title: 'Buổi học hằng ngày',
+    recommended: '(khuyên dùng)',
+    hint: 'Quyết định mục tiêu thời gian mỗi ngày (cộng chung mọi ngôn ngữ) và số câu mỗi lượt luyện tập (5 / 10 / 20 câu).',
+    /** {{names}} = Pinyin / IPA / Romanization */
+    showPron: 'Luôn hiện cách đọc ({{names}})',
+    showPronHint: '— áp dụng cho mọi ngôn ngữ ({{names}}); tắt đi để luyện đọc chữ viết, khi cần vẫn bấm hiện được',
+  },
+  accent: {
+    title: 'Giọng tiếng Anh',
+    us: 'Anh – Mỹ (US)',
+    uk: 'Anh – Anh (UK)',
+    hint: 'Áp dụng cho khóa tiếng Anh: giọng đọc dùng cho âm thanh và phiên âm IPA hiển thị trước (Mỹ hoặc Anh, khi hai cách đọc khác nhau).',
+  },
+  audio: {
+    title: 'Âm thanh',
+    unsupported: 'Trình duyệt này không hỗ trợ Web Speech API. Hãy dùng Chrome, Edge, Safari hoặc Firefox bản mới.',
+    perCourse: 'Mỗi ngôn ngữ dùng giọng đọc riêng của trình duyệt/hệ điều hành. Chọn giọng cho từng ngôn ngữ bên dưới.',
+    noVoice: 'Không tìm thấy giọng đọc {{name}} ({{tag}}) — các nút nghe của ngôn ngữ này bị tắt.',
+    installTitle: 'Cách cài giọng đọc {{name}}',
+    install: {
+      windows: 'Windows: Settings → Time & Language → Language & region → Add a language → {{pack}} — chọn cài “Text-to-speech”.',
+      macos: 'macOS: System Settings → Accessibility → Spoken Content → System Voice → Manage Voices → {{pack}}.',
+      android: 'Android: Cài đặt → Hệ thống → Ngôn ngữ → Đầu ra chuyển văn bản thành lời nói → tải dữ liệu giọng {{name}}.',
+      ios: 'iOS: Cài đặt → Trợ năng → Nội dung được đọc → Giọng nói → chọn và tải giọng {{name}}.',
+      chrome: 'Chrome trên máy tính thường có sẵn giọng “{{voice}}”.',
+    },
+    reload: 'Sau khi cài, tải lại trang.',
+    voice_one: 'Giọng đọc ({{count}} giọng {{name}})',
+    voice_other: 'Giọng đọc ({{count}} giọng {{name}})',
+    auto: 'Tự động ({{name}})',
+    rate: 'Tốc độ đọc: {{rate}}×',
+    rateHint: '(nút “{{slow}}” đọc bằng {{pct}}% tốc độ này)',
+    test: 'Nghe thử',
+    testAria: 'Nghe thử giọng {{name}}',
+  },
+  recognition: {
+    title: 'Nhận dạng giọng nói (luyện nói)',
+    available: 'Trình duyệt này có nhận dạng giọng nói.',
+    unavailable: 'Trình duyệt này không có nhận dạng giọng nói.',
+    optional: 'Đây là tính năng không bắt buộc: chỉ dùng trong phần luyện nói, khi bạn bấm micro và cho phép truy cập.',
+    approximate: 'Kết quả chỉ mang tính gần đúng và không phải điểm phát âm — độ chính xác thay đổi theo trình duyệt, thiết bị, micro và giọng nói.',
+    selfCheck: 'Không có nhận dạng vẫn luyện nói được: nghe mẫu, nói theo rồi tự đánh giá (tự kiểm tra).',
+    privacy: 'Một số trình duyệt (như Chrome) gửi âm thanh đến máy chủ nhận dạng của họ; Safari dùng hệ điều hành; Firefox chưa hỗ trợ.',
+  },
+  backup: {
+    title: 'Sao lưu và khôi phục',
+    description: 'Tiến độ của mọi ngôn ngữ chỉ được lưu trong trình duyệt này (localStorage) trên thiết bị này — không tự đồng bộ sang máy khác. Xóa dữ liệu duyệt web sẽ làm mất tiến độ, nên hãy xuất bản sao lưu thường xuyên. Bản sao lưu chứa tất cả các ngôn ngữ.',
+    export: 'Xuất dữ liệu (JSON)',
+    importFile: 'Khôi phục từ tệp…',
+    confirmReplace: 'Thay toàn bộ tiến độ hiện tại bằng bản sao lưu này?',
+    summary: 'Bản sao lưu: {{lessons}}, {{words}}, {{quizzes}}. Cập nhật lần cuối {{date}}.',
+    lessons_one: '{{count}} bài đã xong',
+    lessons_other: '{{count}} bài đã xong',
+    words_one: '{{count}} từ có lịch ôn',
+    words_other: '{{count}} từ có lịch ôn',
+    quizzes_one: '{{count}} bài kiểm tra',
+    quizzes_other: '{{count}} bài kiểm tra',
+    restore: 'Khôi phục',
+    restored: 'Đã khôi phục dữ liệu.',
+  },
+  srs: {
+    title: 'Lịch ôn tập (lặp lại ngắt quãng)',
+    newWords: 'Khi hoàn thành một bài, các từ mới của bài được lên lịch ôn lần đầu vào ngày mai.',
+    correct: 'Trả lời đúng: khoảng cách ôn tăng dần 1 → 3 → khoảng cách × hệ số dễ (bắt đầu 2,3; tối đa 180 ngày). Mỗi ngày chỉ lần đúng đầu tiên mới làm tăng khoảng cách.',
+    wrong: 'Trả lời sai: từ được ôn lại ngay, khoảng cách về 0, hệ số dễ giảm 0,2 (tối thiểu 1,3). Từ vừa bị quên luôn được ưu tiên đầu hàng đợi.',
+    perCourse: 'Mỗi ngôn ngữ có lịch ôn riêng; từ đến hạn của ngôn ngữ đang học hiển thị ở Tổng quan và Luyện tập.',
+    levels: 'Mức độ:',
+    level: {
+      new: '(chưa học)',
+      learning: '(khoảng cách < 3 ngày)',
+      familiar: '(3–20 ngày)',
+      mastered: '(≥ 21 ngày)',
+    },
+  },
+  reset: {
+    title: 'Xóa toàn bộ tiến độ',
+    open: 'Đặt lại tiến độ…',
+    /** <b>…</b> marks bold text. {{word}} = confirmWord */
+    warning: 'Thao tác này xóa mọi bài học, lịch ôn, kết quả kiểm tra và cài đặt của <b>tất cả các ngôn ngữ</b> (Trung, Anh, Hàn) trong trình duyệt này và <b>không thể hoàn tác</b>. Nên xuất bản sao lưu trước. Gõ <b>{{word}}</b> để xác nhận.',
+    /** Word the learner must type to confirm the reset */
+    confirmWord: 'XOA',
+    confirmAria: 'Gõ {{word}} để xác nhận',
+    confirm: 'Xóa vĩnh viễn',
+  },
+  footer: 'Phiên bản dữ liệu: {{version}} · Tạo lúc {{date}}',
+};
+
+export default settings;

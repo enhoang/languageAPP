@@ -1,0 +1,7 @@
+node_modules
+dist
+*.log
+.DS_Store
+
+# Source PDFs for the ISTQB & QA module (copyrighted; extracted text lives in src/qa/content/extracted)
+sources/
