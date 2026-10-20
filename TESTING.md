@@ -20,7 +20,7 @@ Run `npm test` and `npm run build` first. Then use `npm run preview` in Chrome o
 | 14 | Tests: 5 / 10 / 20 questions for each skill | Count matches (or a notice when content is limited); score equals the number of "Chính xác" answers; only completed lessons are tested |
 | 15 | Progress page | Weekly chart, mastery, skills, weak topics and review queue reflect your actions |
 | 16 | Settings: change speech rate/voice, toggle pinyin | Audio changes; with pinyin off, "hiện pinyin" reveals it on demand |
-| 17 | Export, then Restore the file; try restoring a non-JSON file | Valid file shows a summary and asks to confirm; invalid file shows an error |
+| 17 | Settings → Sao lưu & khôi phục: create a backup, download the file, copy the code | File `language-companion-backup-YYYY-MM-DD.json` downloads; code copied; date, size and checksum shown; warning that an unencrypted backup is readable |
 | 18 | Reset: button disabled until `XOA` is typed | After reset, the dashboard returns to the new-learner state |
 | 19 | Mobile width | No horizontal scrolling; bottom navigation and the ☰ drawer reach every page |
 | 20 | Leave for 3+ days (or edit dates in an exported file) | Dashboard shows "Chào mừng trở lại" and resumes at the actual next lesson |
@@ -86,3 +86,15 @@ Use the deployed HTTPS site (or `npm run build && npm run preview`).
 | 63 | Load once, then go offline (airplane mode) and reload; open lessons, vocabulary, ISTQB, conversation (demo) | All work; offline banner shown; "back online" message when the connection returns |
 | 64 | Deploy a new version while the app is open | "Có phiên bản mới" banner; nothing reloads until "Cập nhật ngay"; progress intact afterwards |
 | 65 | Settings → Ứng dụng & ngoại tuyến | Installed/browser, online/offline and offline-ready status are correct; storage usage and persistence shown |
+
+## Backup & Restore
+
+| # | Check | Expected |
+|---|---|---|
+| 66 | Make progress in a course, ISTQB and conversation practice; create a backup; clear site data (or uninstall/reinstall the app); restore from the code with "Replace" | Preview shows dates and counts; after confirming, the app reloads with all progress, saved phrases and conversation history back |
+| 67 | Restore with a truncated code, an edited JSON file, and a random text | Clear error (damaged / integrity check failed / not a backup); nothing changes |
+| 68 | Create an encrypted backup; restore with a wrong, then the right password | Wrong password refused; right password shows the preview |
+| 69 | Device with other progress → restore with "Merge" twice | Data from both is kept; nothing is duplicated; local settings and interface language unchanged |
+| 70 | Airplane mode: create and restore | Both work offline |
+| 71 | Restore an older single-part backup (old course / ISTQB / conversation export) | Accepted, marked as older backup without checksum |
+| 72 | 390 px width: all three tabs | No horizontal scrolling; buttons reachable |

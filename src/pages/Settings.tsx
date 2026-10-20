@@ -1,20 +1,17 @@
 import { PwaSettings } from '../pwa/PwaSettings';
-import { useRef, useState } from 'react';
+import { BackupSection } from '../backup/BackupSection';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 import { speechLangOf, useAppData, useSpeech } from '../state/AppDataContext';
 import { COURSE_IDS, COURSES } from '../courses';
-import { exportBackup, parseBackup, type BackupError } from '../lib/storage';
 import { recognitionSupported } from '../lib/recognition';
-import { dayKey } from '../lib/dates';
 import { MASTERY_STATUSES } from '../lib/srs';
-import type { AppData, Course, CourseId } from '../types';
+import type { Course, CourseId } from '../types';
 import { Button, Card, PageHeader, SectionTitle, cx } from '../components/ui';
 import { LanguageSettings } from '../components/LanguageSwitcher';
 import { useI18n } from '../i18n/LocaleContext';
 import { useInlineCourseName } from '../components/CourseSwitcher';
-
-type ImportMsg = { ok: true } | { ok: false; error: BackupError; version?: number };
 
 /** Test sentence spoken in each course language. */
 const SAMPLE: Record<CourseId, string> = {
@@ -78,12 +75,9 @@ function CourseVoice({ course }: { course: Course }) {
 }
 
 export default function Settings() {
-  const { data, updateSettings, replaceData, resetAll } = useAppData();
+  const { data, updateSettings, resetAll } = useAppData();
   const { supported } = useSpeech();
   const { t, tr, locale } = useI18n();
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [pending, setPending] = useState<AppData | null>(null);
-  const [importMsg, setImportMsg] = useState<ImportMsg | null>(null);
   const [resetOpen, setResetOpen] = useState(false);
   const [confirmText, setConfirmText] = useState('');
   const s = data.settings;
@@ -94,30 +88,6 @@ export default function Settings() {
   const confirmOk = confirmText.trim().normalize('NFC').toUpperCase() === confirmWord.normalize('NFC').toUpperCase();
   const pronNames = COURSE_IDS.map((id) => tr(COURSES[id].pronName)).join(' / ');
 
-  const doExport = () => {
-    const blob = new Blob([exportBackup(data)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `language-companion-backup-${dayKey()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const onFile = async (f: File | undefined) => {
-    if (!f) return;
-    const r = parseBackup(await f.text());
-    if (r.ok) {
-      setPending(r.data);
-      setImportMsg(null);
-    } else {
-      setPending(null);
-      setImportMsg({ ok: false, error: r.error, version: r.version });
-    }
-    if (fileRef.current) fileRef.current.value = '';
-  };
-
-  const pendingCourses = pending ? COURSE_IDS.map((id) => pending.courses[id]) : [];
 
   return (
     <div className="space-y-6">
@@ -203,35 +173,7 @@ export default function Settings() {
         </ul>
       </Card>
 
-      <div id="settings-backup" className="scroll-mt-6">
-      <Card>
-        <SectionTitle>{t('settings.backup.title')}</SectionTitle>
-        <p className="mb-3 text-sm text-muted">{t('settings.backup.description')}</p>
-        <div className="flex flex-wrap gap-2">
-          <Button onClick={doExport}>{t('settings.backup.export')}</Button>
-          <Button variant="secondary" onClick={() => fileRef.current?.click()}>{t('settings.backup.importFile')}</Button>
-          <input ref={fileRef} type="file" accept="application/json,.json" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
-        </div>
-        {pending && (
-          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm">
-            <p className="font-medium text-amber-800">{t('settings.backup.confirmReplace')}</p>
-            <p className="mt-1 text-muted">
-              {t('settings.backup.summary', {
-                lessons: t('settings.backup.lessons', { count: pendingCourses.reduce((n, cp) => n + Object.values(cp.lessons).filter((l) => l.status === 'completed').length, 0) }),
-                words: t('settings.backup.words', { count: pendingCourses.reduce((n, cp) => n + Object.keys(cp.words).length, 0) }),
-                quizzes: t('settings.backup.quizzes', { count: pendingCourses.reduce((n, cp) => n + cp.quizzes.length, 0) }),
-                date: new Date(pending.updatedAt).toLocaleString(locale),
-              })}
-            </p>
-            <div className="mt-3 flex gap-2">
-              <Button onClick={() => { replaceData(pending); setPending(null); setImportMsg({ ok: true }); }}>{t('settings.backup.restore')}</Button>
-              <Button variant="ghost" onClick={() => setPending(null)}>{t('common.actions.cancel')}</Button>
-            </div>
-          </div>
-        )}
-        {importMsg && <p className={cx('mt-3 text-sm', importMsg.ok ? 'text-emerald-700' : 'text-rose-700')}>{importMsg.ok ? t('settings.backup.restored') : t(`common.backup.${importMsg.error}`, { version: importMsg.version })}</p>}
-      </Card>
-      </div>
+      <BackupSection />
 
       <Card>
         <SectionTitle>{t('settings.srs.title')}</SectionTitle>

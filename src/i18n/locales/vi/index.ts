@@ -23,8 +23,9 @@ import qa from './qa';
 import qaStudy from './qaStudy';
 import pwa from './pwa';
 import conv from './conv';
+import backup from './backup';
 
-const vi = { common, ex, layout, dashboard, path, progress, settings, guide, chart, exercise, results, practice, tests, lesson, vocabulary, word, pronunciation, grammar, courses, speak, strokes, qa, qaStudy, pwa, conv };
+const vi = { common, ex, layout, dashboard, path, progress, settings, guide, chart, exercise, results, practice, tests, lesson, vocabulary, word, pronunciation, grammar, courses, speak, strokes, qa, qaStudy, pwa, conv, backup };
 
 export type Dictionary = typeof vi;
 export default vi;
