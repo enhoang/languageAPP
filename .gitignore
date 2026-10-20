@@ -5,3 +5,8 @@ dist
 
 # Source PDFs for the ISTQB & QA module (copyrighted; extracted text lives in src/qa/content/extracted)
 sources/
+
+# Local environment files (never commit secrets)
+.env
+.env.*
+!.env.example

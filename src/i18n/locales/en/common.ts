@@ -20,6 +20,7 @@ const common: Messages<typeof vi> = {
     guide: 'Guide',
     professional: 'Professional knowledge',
     qa: 'ISTQB & QA Knowledge',
+    conversation: 'Conversation practice',
     mainNav: 'Main navigation',
     quickNav: 'Quick navigation',
     openMenu: 'Open menu',

@@ -21,8 +21,10 @@ import speak from './speak';
 import strokes from './strokes';
 import qa from './qa';
 import qaStudy from './qaStudy';
+import pwa from './pwa';
+import conv from './conv';
 
-const vi = { common, ex, layout, dashboard, path, progress, settings, guide, chart, exercise, results, practice, tests, lesson, vocabulary, word, pronunciation, grammar, courses, speak, strokes, qa, qaStudy };
+const vi = { common, ex, layout, dashboard, path, progress, settings, guide, chart, exercise, results, practice, tests, lesson, vocabulary, word, pronunciation, grammar, courses, speak, strokes, qa, qaStudy, pwa, conv };
 
 export type Dictionary = typeof vi;
 export default vi;

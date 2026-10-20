@@ -24,7 +24,13 @@ const PATHS: Record<string, string> = {
   clock: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2',
   refresh: 'M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5',
   backspace: 'M21 5H8l-6 7 6 7h13zM12 9l6 6M18 9l-6 6',
+  chat: 'M4 5h16v11H9l-5 4zM8 9.5h8M8 12.5h5',
   shield: 'M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6zM8.5 12l2.5 2.5 4.5-5',
+  download: 'M12 4v11M7 10l5 5 5-5M5 20h14',
+  mic: 'M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM5 11a7 7 0 0 0 14 0M12 18v3',
+  bulb: 'M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z',
+  send: 'M4 12 20 4l-6 16-3-7z',
+  pause: 'M8 5v14M16 5v14',
 };
 
 export type IconName = keyof typeof PATHS;

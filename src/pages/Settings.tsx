@@ -1,3 +1,4 @@
+import { PwaSettings } from '../pwa/PwaSettings';
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trans } from 'react-i18next';
@@ -135,6 +136,8 @@ export default function Settings() {
         <p className="mt-3 text-sm text-muted">{t('settings.language.note')}</p>
       </Card>
 
+      <PwaSettings />
+
       <Card>
         <SectionTitle>{t('settings.session.title')}</SectionTitle>
         <div className="flex flex-wrap gap-2">
@@ -200,6 +203,7 @@ export default function Settings() {
         </ul>
       </Card>
 
+      <div id="settings-backup" className="scroll-mt-6">
       <Card>
         <SectionTitle>{t('settings.backup.title')}</SectionTitle>
         <p className="mb-3 text-sm text-muted">{t('settings.backup.description')}</p>
@@ -227,6 +231,7 @@ export default function Settings() {
         )}
         {importMsg && <p className={cx('mt-3 text-sm', importMsg.ok ? 'text-emerald-700' : 'text-rose-700')}>{importMsg.ok ? t('settings.backup.restored') : t(`common.backup.${importMsg.error}`, { version: importMsg.version })}</p>}
       </Card>
+      </div>
 
       <Card>
         <SectionTitle>{t('settings.srs.title')}</SectionTitle>

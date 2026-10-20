@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { InstallBanner, OfflineBanner, UpdateBanner } from '../pwa/PwaUI';
 import { useAppData } from '../state/AppDataContext';
 import { computeStreak, totalActivity } from '../lib/stats';
 import { useI18n } from '../i18n/LocaleContext';
@@ -35,6 +36,13 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
           {t(`common.nav.${n.nav}`)}
         </NavLink>
       ))}
+      {/* Conversation practice: Chinese, English or Korean, independent of the daily lessons */}
+      <NavLink to="/conversation" onClick={onNavigate}
+        className={({ isActive }) => cx('mt-2 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
+          isActive ? 'bg-violet-100 text-violet-800' : 'text-stone-600 hover:bg-white hover:text-ink')}>
+        <Icon name="chat" />
+        {t('common.nav.conversation')}
+      </NavLink>
       {/* Professional knowledge: independent of the language courses */}
       <div className="px-3 pb-1 pt-4 text-[11px] font-medium uppercase tracking-wide text-muted">{t('common.nav.professional')}</div>
       <NavLink to="/qa" onClick={onNavigate}
@@ -136,6 +144,9 @@ export function Layout({ children }: { children: ReactNode }) {
             {t('common.saveError')}
           </div>
         )}
+        <UpdateBanner />
+        <OfflineBanner />
+        <InstallBanner />
         {children}
       </main>
 

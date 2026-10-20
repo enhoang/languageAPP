@@ -1,12 +1,18 @@
 import { useState } from 'react';
 import { useSpeech } from '../state/AppDataContext';
+import { COURSES } from '../courses';
+import type { CourseId } from '../types';
 import { Icon } from './Icon';
 import { cx } from './ui';
 import { useI18n } from '../i18n/LocaleContext';
 
 /** Play / slow-play buttons for target-language text. Disabled with an explanation when no voice for the course language exists. */
-export function AudioButton({ text, size = 'md', showSlow = true, className }: { text: string; size?: 'sm' | 'md' | 'lg'; showSlow?: boolean; className?: string }) {
-  const { supported, hasVoice, speak, course } = useSpeech();
+export function AudioButton({ text, size = 'md', showSlow = true, className, courseId }: {
+  text: string; size?: 'sm' | 'md' | 'lg'; showSlow?: boolean; className?: string;
+  /** language of the text when it is not the active course (e.g. conversation practice) */
+  courseId?: CourseId;
+}) {
+  const { supported, hasVoice, speak, course } = useSpeech(courseId ? COURSES[courseId] : undefined);
   const { t, tr } = useI18n();
   const [playing, setPlaying] = useState(false);
   const disabled = !supported || !hasVoice;

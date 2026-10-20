@@ -5,6 +5,7 @@ import App from './App';
 import { AppDataProvider } from './state/AppDataContext';
 import { LocaleProvider } from './i18n/LocaleContext';
 import './i18n';
+import './pwa/pwaState'; // listens for the install prompt before React mounts
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(

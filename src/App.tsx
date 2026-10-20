@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import { ChunkError, ChunkErrorBoundary } from './pwa/PwaUI';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -17,6 +18,7 @@ import { useCourse } from './state/AppDataContext';
 
 /** ISTQB & QA module: loaded on demand, independent of the language courses. */
 const QaRoutes = lazy(() => import('./pages/qa/QaRoutes'));
+const ConversationRoutes = lazy(() => import('./pages/conversation/ConversationRoutes'));
 import { ButtonLink } from './components/ui';
 import { useI18n } from './i18n/LocaleContext';
 
@@ -36,8 +38,8 @@ const OPEN_BEFORE_CHOICE = ['/courses', '/settings', '/guide'];
 export default function App() {
   const { chosen } = useCourse();
   const { pathname } = useLocation();
-  // The ISTQB & QA module never requires choosing a language course.
-  const needsChoice = !chosen && !OPEN_BEFORE_CHOICE.includes(pathname) && !pathname.startsWith('/qa');
+  // The ISTQB & QA module and conversation practice never require choosing a language course.
+  const needsChoice = !chosen && !OPEN_BEFORE_CHOICE.includes(pathname) && !pathname.startsWith('/qa') && !pathname.startsWith('/conversation');
   return (
     <Layout>
       {needsChoice ? <Courses firstRun /> : (
@@ -55,7 +57,8 @@ export default function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/guide" element={<Guide />} />
         <Route path="/courses" element={<Courses firstRun={!chosen} />} />
-        <Route path="/qa/*" element={<Suspense fallback={<div className="py-20 text-center text-muted">…</div>}><QaRoutes /></Suspense>} />
+        <Route path="/qa/*" element={<ChunkErrorBoundary fallback={<ChunkError />}><Suspense fallback={<div className="py-20 text-center text-muted">…</div>}><QaRoutes /></Suspense></ChunkErrorBoundary>} />
+        <Route path="/conversation/*" element={<ChunkErrorBoundary fallback={<ChunkError />}><Suspense fallback={<div className="py-20 text-center text-muted">…</div>}><ConversationRoutes /></Suspense></ChunkErrorBoundary>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       )}

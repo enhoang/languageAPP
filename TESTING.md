@@ -59,3 +59,30 @@ Run `npm test` and `npm run build` first. Then use `npm run preview` in Chrome o
 | 48 | QA Progress: export, reset, import | Backup restores QA progress only; a language backup file is rejected |
 | 49 | Sources page | Both documents with version, date, pages, license; "no unreadable pages"; practice/supplementary disclaimers |
 | 50 | All QA pages at 390 px | No horizontal scrolling; QA section tabs scroll/wrap |
+
+## Conversation practice
+
+| # | Check | Expected |
+|---|---|---|
+| 51 | Fresh profile, no AI server: open "Luyện hội thoại" | Clearly labelled demo mode; setup form for 中文 / English / 한국어, 4 levels, 9 scenarios, guided/free |
+| 52 | Start a Korean shopping conversation; tap "Gợi ý từ" → Từ / Cụm từ / Câu | Hangul with [actual pronunciation], sound-change notes, romanization marked as reference; "Chèn vào câu" fills the draft without sending |
+| 53 | Send your own reply | Sample answers to compare with appear; the demo says it did not check your sentence; next partner line follows |
+| 54 | Mic button (Chrome) / Firefox | Chrome: transcript goes into the draft only; Firefox: typing note, no mic button |
+| 55 | Save a suggestion, mark one difficult, open "Ôn câu đã lưu" | Flashcards; difficult item is due now; reviews reschedule |
+| 56 | Pause, then continue from the home list; Restart; Finish | Session resumes; new session with same setup; summary shown and session listed as finished |
+| 57 | With the server (`server/`, see server/README.md): set URL + access code, Test connection, then chat | "AI" badge; replies follow your messages; feedback separates mistakes from optional suggestions; correct sentences get no invented errors |
+| 58 | Wrong access code / server stopped | Clear error with Retry; your message is kept |
+
+## Install & offline (PWA)
+
+Use the deployed HTTPS site (or `npm run build && npm run preview`).
+
+| # | Check | Expected |
+|---|---|---|
+| 59 | Chrome/Edge desktop or Android | "Cài đặt ứng dụng" button in the reminder and in Settings → Ứng dụng & ngoại tuyến; the browser dialog opens only after clicking; installed app opens in its own window with the app icon and name |
+| 60 | iPhone/iPad Safari | Reminder explains Share → Add to Home Screen (no fake install button); the Home Screen app opens without the address bar |
+| 61 | Desktop Firefox | No install button; instructions say Firefox desktop cannot install web apps |
+| 62 | Dismiss the reminder, reload | Reminder stays hidden; Settings can show it again |
+| 63 | Load once, then go offline (airplane mode) and reload; open lessons, vocabulary, ISTQB, conversation (demo) | All work; offline banner shown; "back online" message when the connection returns |
+| 64 | Deploy a new version while the app is open | "Có phiên bản mới" banner; nothing reloads until "Cập nhật ngay"; progress intact afterwards |
+| 65 | Settings → Ứng dụng & ngoại tuyến | Installed/browser, online/offline and offline-ready status are correct; storage usage and persistence shown |

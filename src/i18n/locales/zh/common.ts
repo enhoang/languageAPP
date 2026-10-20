@@ -20,6 +20,7 @@ const common: Messages<typeof vi> = {
     guide: '使用说明',
     professional: '职业知识',
     qa: 'ISTQB 与 QA 知识',
+    conversation: '会话练习',
     mainNav: '主导航',
     quickNav: '快捷导航',
     openMenu: '打开菜单',

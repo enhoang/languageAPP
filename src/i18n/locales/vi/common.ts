@@ -18,6 +18,7 @@ const common = {
     guide: 'Hướng dẫn',
     professional: 'Kiến thức nghề nghiệp',
     qa: 'Kiến thức ISTQB & QA',
+    conversation: 'Luyện hội thoại',
     mainNav: 'Điều hướng chính',
     quickNav: 'Điều hướng nhanh',
     openMenu: 'Mở menu',

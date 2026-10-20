@@ -1,0 +1,14 @@
+{
+  "name": "language-companion-conversation-server",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Backend for the Conversation Practice feature: keeps the Anthropic API key on the server and calls Claude.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.131.0"
+  }
+}
