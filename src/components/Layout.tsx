@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { useAppData, useCourse } from '../state/AppDataContext';
+import { useAppData } from '../state/AppDataContext';
 import { computeStreak, totalActivity } from '../lib/stats';
 import { useI18n } from '../i18n/LocaleContext';
 import { Icon, type IconName } from './Icon';
@@ -53,10 +53,9 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
 
 function Brand({ compact = false }: { compact?: boolean }) {
   const { t } = useI18n();
-  const { course } = useCourse();
   return (
     <div className="flex min-w-0 items-center gap-2.5">
-      <div lang={course.speechLang} className={cx('flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-400 text-lg text-white', course.fontClass)} aria-hidden="true">{course.endonym.slice(0, 1)}</div>
+      <img src={`${import.meta.env.BASE_URL}app-icon.png`} alt="" aria-hidden="true" className="h-9 w-9 shrink-0 rounded-xl object-cover" />
       <div className={cx('min-w-0 leading-tight', compact && 'hidden sm:block')}>
         <div className="truncate text-sm font-semibold">{t('layout.appName')}</div>
         <div className="truncate text-xs text-muted">{t('layout.appTagline')}</div>
